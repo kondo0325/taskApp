@@ -140,6 +140,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aR8-nO-6qB"/>
                     </view>
+                    <connections>
+                        <outlet property="contentsTextView" destination="959-Yx-T1j" id="aME-OW-bVX"/>
+                        <outlet property="datePicker" destination="884-QC-YiY" id="U2Q-PP-HWY"/>
+                        <outlet property="titleTextField" destination="etB-ic-Xla" id="WjT-rn-3Qn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b46-N8-1F1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
