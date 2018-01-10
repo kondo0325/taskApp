@@ -14,6 +14,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     @IBOutlet weak var tableView: UITableView!
+
+    
+    @IBAction func searchTextEditEnd(_ sender: UITextField) {
+        if(sender.text == ""){
+            taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: false)
+        }else{
+            taskArray = try! Realm().objects(Task.self).filter("category like %@",sender.text!).sorted(byKeyPath: "date", ascending: false)
+        }
+        viewWillAppear(true)// TableView を更新させる
+        
+    }
+    
     
     // Realmインスタンスを取得する
     let realm = try! Realm()

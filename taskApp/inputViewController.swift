@@ -15,6 +15,8 @@ class inputViewController: UIViewController {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var contentsTextView: UITextView!
     @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var categoryTextField: UITextField!
+    
     
     var task: Task!
     let realm = try! Realm()
@@ -28,6 +30,7 @@ class inputViewController: UIViewController {
         titleTextField.text = task.title
         contentsTextView.text = task.contents
         datePicker.date = task.date
+        categoryTextField.text = task.category
     }
     
     @objc func dismissKeyboard(){
@@ -39,32 +42,33 @@ class inputViewController: UIViewController {
             self.task.title = self.titleTextField.text!
             self.task.contents = self.contentsTextView.text
             self.task.date = self.datePicker.date
+            self.task.category = self.categoryTextField.text!
             self.realm.add(self.task, update: true)
         }
+        setNotification(task: task)
         super.viewWillDisappear(animated)
     }
 
     // タスクのローカル通知を登録する
     func setNotification(task: Task) {
         let content = UNMutableNotificationContent()
-        
-        if task.title == ""{
+        // タイトルと内容を設定(中身がない場合メッセージ無しで音だけの通知になるので「(xxなし)」を表示する)
+        if task.title == "" {
             content.title = "(タイトルなし)"
-        }else{
+        } else {
             content.title = task.title
         }
-        if task.contents == ""{
+        if task.contents == "" {
             content.body = "(内容なし)"
-        }else{
+        } else {
             content.body = task.contents
         }
         content.sound = UNNotificationSound.default()
         
         // ローカル通知が発動するtrigger（日付マッチ）を作成
-        let calender = Calendar.current
-        let dateComponents = calender.dateComponents([.year, .month, .day, .hour, .minute], from:task.date)
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: task.date)
         let trigger = UNCalendarNotificationTrigger.init(dateMatching: dateComponents, repeats: false)
-        
         
         // identifier, content, triggerからローカル通知を作成（identifierが同じだとローカル通知を上書き保存）
         let request = UNNotificationRequest.init(identifier: String(task.id), content: content, trigger: trigger)
@@ -83,7 +87,6 @@ class inputViewController: UIViewController {
                 print("---------------/")
             }
         }
-        
     }
     
     override func didReceiveMemoryWarning() {
